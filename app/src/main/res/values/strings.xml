@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HelloWorld</string>
+    <string name="myName">Youngjin Shin</string>
+    <string name="introduce">Hello my name is &#160;</string>
+</resources>
