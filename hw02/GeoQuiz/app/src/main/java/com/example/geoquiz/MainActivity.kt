@@ -1,10 +1,8 @@
 package com.example.geoquiz
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.annotation.StringRes
 import com.example.geoquiz.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -23,22 +21,19 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.trueButton.setOnClickListener{ view: View ->
+        binding.trueButton.setOnClickListener{
             checkAnswer(true)
         }
-        binding.falseButton.setOnClickListener{ view: View ->
+        binding.falseButton.setOnClickListener{
             checkAnswer(false)
         }
-        binding.nextButton.setOnClickListener{view: View -> 
+        binding.nextButton.setOnClickListener{
             if(currentIndex == questionBank.size -1){
-                Toast.makeText(
-                    this,
-                    R.string.last_question_toast,
-                    Toast.LENGTH_SHORT
-                ).show()
+                showSnackbar(R.string.last_question_toast)
             }else {
                 currentIndex = (currentIndex + 1) % questionBank.size
                 updateQuestion()
@@ -46,11 +41,7 @@ class MainActivity : ComponentActivity() {
         }
         binding.previousButton.setOnClickListener{
             if(currentIndex == 0){
-                Toast.makeText(
-                    this,
-                    R.string.first_question_toast,
-                    Toast.LENGTH_SHORT
-                ).show()
+                showSnackbar(R.string.first_question_toast)
             }else {
                 currentIndex = (currentIndex - 1) % questionBank.size
                 updateQuestion()
@@ -71,8 +62,24 @@ class MainActivity : ComponentActivity() {
         }else{
             R.string.incorrect_toast
         }
-        Snackbar.make(findViewById(R.id.main_view), messageResId, Snackbar.LENGTH_SHORT)
-            .show()
+
+        showSnackbar(messageResId)
+
+//        Toast.makeText(
+//            this,
+//            messageResId,
+//            Toast.LENGTH_SHORT
+//        ).show()
+
+    }
+
+    private fun showSnackbar (textResId:Int){
+        val snackbar = Snackbar.make(
+            binding.root,
+            textResId,
+            Snackbar.LENGTH_SHORT
+        )
+        snackbar.show()
     }
 
 }
