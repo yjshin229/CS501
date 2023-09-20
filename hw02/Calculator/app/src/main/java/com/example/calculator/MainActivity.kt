@@ -1,6 +1,7 @@
 package com.example.calculator
 
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var expression : String
-    private lateinit var lastNumber: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -62,8 +63,8 @@ class MainActivity : AppCompatActivity() {
             }else{
 //                val stringBuilder = StringBuilder(binding.inputText.text.toString())
 //                val lastNumber = binding.inputText.text.toString()
-                val lastNumberLength = findLastNumber(binding.inputText.toString())
-                expression = binding.inputText.text.toString().drop(lastNumberLength) + "sqrt($lastNumber)"
+                val lastNumberLength = findLastNumber(binding.inputText.text.toString())
+                expression = binding.inputText.text.toString().drop(lastNumberLength) + "sqrt(" + binding.inputText.text.toString().takeLast(lastNumberLength) + ")"
                 binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
             }
         }
@@ -92,8 +93,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun getResult(){
         val engine = ScriptEngineManager().getEngineByName("rhino")
+        val evalExp = binding.inputText.text.toString().replace("sqrt", "Math.sqrt")
         try{
-            val tempRes = engine.eval(binding.inputText.text.toString())
+            val tempRes = engine.eval(evalExp)
 
             if(tempRes is Number){
                 binding.resultText.text = tempRes.toString()
@@ -116,13 +118,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun findLastNumber(s:String): Int{
-        for(i in (0..s.lastIndex).reversed()){
-            if(s[i].toString().toDouble() is Number){
-                lastNumber = s[i] + lastNumber
+        var count = 0
+        for(i in s.length-1 downTo 0){
+            if(s[i].toString() != "+" || s[i].toString() != "-" || s[i].toString() != "*" || s[i].toString() != "/" || s[i].toString() != ")" ){
+                count ++
             }else{
                 break
             }
         }
-        return lastNumber.length
+        return count
     }
 }
