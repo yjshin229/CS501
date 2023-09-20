@@ -1,33 +1,23 @@
 package com.example.calculator
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculator.databinding.ActivityMainBinding
-import net.objecthunter.exp4j.Expression
-import net.objecthunter.exp4j.ExpressionBuilder
-import java.lang.Math.sqrt
-import javax.script.ScriptEngine
+import javax.script.ScriptEngineManager
+import javax.script.ScriptException
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var expression: Expression
-    private lateinit var operator : String
-    private lateinit var tempAns : String
-
-    private var num1 : Double = 0.0
-    private var num2 : Double = 0.0
-    private var result : Double = 0.0
-
-    private var isLastNumber =  false
-    private var isError = false
-    private var isLastDot = false
-
+    private lateinit var expression : String
+    private lateinit var lastNumber: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,126 +30,82 @@ class MainActivity : AppCompatActivity() {
         //equal 누르면 계산하고 res에 보여주고 text,temp 초기화
         //text에 아무것도 없는 상태에서 오퍼레이터 누르면 무시!!!!!
 
+        //detect backspace
+
+        binding.inputText.isActivated = true
+
         binding.buttonAdd.setOnClickListener {
-            num1 = (binding.resultText.text.toString()).toDouble()
-            val primary = java.lang.String.format("%.2f", num1)
-            binding.inputText.setText(primary)
-            binding.resultText.text = ""
-            operator = "+"
+            if(binding.inputText.text.isNotEmpty()){
+                expression = binding.inputText.text.toString() + "+"
+                binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+            }
         }
         binding.buttonSub.setOnClickListener {
-            num1 = (binding.resultText.text.toString()).toDouble()
-            val primary = java.lang.String.format("%.2f", num1)
-            binding.inputText.setText(primary)
-            binding.resultText.text = ""
-            operator = "-"
+            expression = binding.inputText.text.toString() + "-"
+            binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
         }
         binding.buttonMul.setOnClickListener {
-            num1 = (binding.resultText.text.toString()).toDouble()
-            val primary = java.lang.String.format("%.2f", num1)
-            binding.inputText.setText(primary)
-            binding.resultText.text = ""
-            operator = "*"
+            if(binding.inputText.text.isNotEmpty()){
+                expression = binding.inputText.text.toString() + "*"
+                binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+            }
         }
         binding.buttonDiv.setOnClickListener {
-            num1 = (binding.resultText.text.toString()).toDouble()
-            val primary = java.lang.String.format("%.2f", num1)
-            binding.inputText.setText(primary)
-            binding.resultText.text = ""
-            operator = "/"
+            if(binding.inputText.text.isNotEmpty()){
+                expression = binding.inputText.text.toString() + "/"
+                binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+            }
         }
         binding.buttonSqrt.setOnClickListener {
-            num1 = (binding.resultText.text.toString()).toDouble()
-            val primary = java.lang.String.format("%.2f", num1)
-            binding.inputText.setText(primary)
-            binding.resultText.text = ""
-            operator = "sqrt"
+            if(binding.inputText.text.isEmpty()){
+                showToast("You need to enter a number first to use SquareRoot")
+            }else{
+//                val stringBuilder = StringBuilder(binding.inputText.text.toString())
+//                val lastNumber = binding.inputText.text.toString()
+                val lastNumberLength = findLastNumber(binding.inputText.toString())
+                expression = binding.inputText.text.toString().drop(lastNumberLength) + "sqrt($lastNumber)"
+                binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+            }
         }
         binding.buttonRes.setOnClickListener {
-            if(operator=="+") {
-                result=num1+num2;
-                tempAns=String.format("%.2f",result);
-                binding.resultText.text = tempAns;
-                binding.inputText.setText("", TextView.BufferType.EDITABLE)
+            if(binding.resultText.visibility == View.VISIBLE){
+                binding.resultText.text = ""
+                binding.inputText.setText("")
+                binding.resultText.visibility = View.INVISIBLE
+            }else{
+                getResult()
             }
-            if(operator=="-") {
-                result=num1-num2;
-                tempAns=String.format("%.2f",result);
-                binding.resultText.text = tempAns;
-                binding.inputText.setText("", TextView.BufferType.EDITABLE)
-            }
-            if(operator=="*") {
-                result=num1*num2;
-                tempAns=String.format("%.2f",result);
-                binding.resultText.text = tempAns;
-                binding.inputText.setText("", TextView.BufferType.EDITABLE)
-            }
-            if(operator=="/") {
-                if(num2 != 0.0){
-                    result=num1/num2;
-                    tempAns=String.format("%.2f",result);
-                }else{
-                    showToast("You cannot divide by 0!")
-                    tempAns = "Err"
-                }
-                binding.resultText.text = tempAns;
-                binding.inputText.setText("", TextView.BufferType.EDITABLE)
-            }
-            if(operator=="sqrt") {
-                result= kotlin.math.sqrt(num2);
-                tempAns=String.format("%.2f",result);
-                binding.resultText.text = tempAns;
-                binding.inputText.setText("", TextView.BufferType.EDITABLE)
-            }
+
         }
+
     }
     fun onPressNumber(view: View){
-        if(isError){
-            binding.inputText.setText((view as Button).text, TextView.BufferType.EDITABLE)
-            isError = false
-        }else{
-            if(binding.inputText.text.toString() == "0.0"){
-                binding.inputText.setText((view as Button).text, TextView.BufferType.EDITABLE)
-            }else{
-                binding.inputText.setText(binding.inputText.text.toString() + "" + (view as Button).text)
-            }
-        }
-        isLastNumber = true
-        calculate()
-    }
-    fun onPressOperator(view: View){
-        if(!isError && !isLastNumber){
-            binding.inputText.setText(binding.inputText.text.toString() + "" + (view as Button).toString())
-            isLastDot = false
-            isLastNumber = false
-            calculate()
+        if(binding.resultText.visibility == View.VISIBLE){
+            binding.resultText.text = ""
+            binding.inputText.setText("")
+            binding.resultText.visibility = View.INVISIBLE
+        }else {
+            expression = binding.inputText.text.toString() + (view as Button).text
+            binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
         }
     }
 
-
-    fun onPressEqual(view: View){
-        calculate()
-        binding.inputText.setText(binding.resultText.text.toString().drop(1))
-    }
-    private fun calculate(){
-        if(isLastNumber && !isError){
-            val text = binding.inputText.text.toString()
-            expression = ExpressionBuilder(text).build()
-        }
+    private fun getResult(){
+        val engine = ScriptEngineManager().getEngineByName("rhino")
         try{
-            val res = expression.evaluate()
-            binding.resultText.visibility = View.VISIBLE
-            binding.resultText.text = "=$res"
-        }catch(err: ArithmeticException){
-            showToast("Evaluation Error: $err")
-            binding.resultText.text = "Err"
-            isError = true
-            isLastNumber = false
+            val tempRes = engine.eval(binding.inputText.text.toString())
+
+            if(tempRes is Number){
+                binding.resultText.text = tempRes.toString()
+            }else{
+                binding.resultText.text = ""
+            }
+        }catch (err: ScriptException){
+            showToast("There is an error in your expression: $err")
         }
+        binding.resultText.visibility = View.VISIBLE
+
     }
-//    private fun getResult(s: String){
-//        val engine = ScriptEngine
-//    }
 
     private fun showToast(s: String){
         Toast.makeText(
@@ -167,5 +113,16 @@ class MainActivity : AppCompatActivity() {
             s,
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun findLastNumber(s:String): Int{
+        for(i in (0..s.lastIndex).reversed()){
+            if(s[i].toString().toDouble() is Number){
+                lastNumber = s[i] + lastNumber
+            }else{
+                break
+            }
+        }
+        return lastNumber.length
     }
 }
