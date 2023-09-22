@@ -9,8 +9,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculator.databinding.ActivityMainBinding
+import java.math.RoundingMode
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
+import java.text.DecimalFormat
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,33 +41,40 @@ class MainActivity : AppCompatActivity() {
             if(binding.inputText.text.isNotEmpty()){
                 expression = binding.inputText.text.toString() + "+"
                 binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+                binding.inputText.setSelection(binding.inputText.text.length)
             }
         }
         binding.buttonSub.setOnClickListener {
             expression = binding.inputText.text.toString() + "-"
             binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+            binding.inputText.setSelection(binding.inputText.text.length)
+
         }
         binding.buttonMul.setOnClickListener {
             if(binding.inputText.text.isNotEmpty()){
                 expression = binding.inputText.text.toString() + "*"
                 binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+                binding.inputText.setSelection(binding.inputText.text.length)
+
             }
         }
         binding.buttonDiv.setOnClickListener {
             if(binding.inputText.text.isNotEmpty()){
                 expression = binding.inputText.text.toString() + "/"
                 binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+                binding.inputText.setSelection(binding.inputText.text.length)
+
             }
         }
         binding.buttonSqrt.setOnClickListener {
             if(binding.inputText.text.isEmpty()){
                 showToast("You need to enter a number first to use SquareRoot")
             }else{
-//                val stringBuilder = StringBuilder(binding.inputText.text.toString())
-//                val lastNumber = binding.inputText.text.toString()
                 val lastNumberLength = findLastNumber(binding.inputText.text.toString())
                 expression = binding.inputText.text.toString().drop(lastNumberLength) + "sqrt(" + binding.inputText.text.toString().takeLast(lastNumberLength) + ")"
                 binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
+                binding.inputText.setSelection(binding.inputText.text.length)
+
             }
         }
         binding.buttonRes.setOnClickListener {
@@ -86,19 +95,25 @@ class MainActivity : AppCompatActivity() {
             binding.inputText.setText("")
             binding.resultText.visibility = View.INVISIBLE
         }else {
+            if((view as Button).text == "0" && binding.inputText.text.toString().last() == '/' ){
+                showToast("Dividing a number with a 0 leads to an calculation error!")
+            }
             expression = binding.inputText.text.toString() + (view as Button).text
             binding.inputText.setText(expression, TextView.BufferType.EDITABLE)
         }
+        binding.inputText.setSelection(binding.inputText.text.length)
     }
 
     private fun getResult(){
         val engine = ScriptEngineManager().getEngineByName("rhino")
         val evalExp = binding.inputText.text.toString().replace("sqrt", "Math.sqrt")
+        val df = DecimalFormat("#.#####")
+        df.roundingMode = RoundingMode.FLOOR
         try{
             val tempRes = engine.eval(evalExp)
 
             if(tempRes is Number){
-                binding.resultText.text = tempRes.toString()
+                binding.resultText.text = df.format(tempRes).toString()
             }else{
                 binding.resultText.text = ""
             }
