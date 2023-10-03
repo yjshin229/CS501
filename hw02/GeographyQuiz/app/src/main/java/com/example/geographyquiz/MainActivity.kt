@@ -1,5 +1,6 @@
 package com.example.geographyquiz
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,12 +13,6 @@ import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
-//    private lateinit var trueButton: Button
-//    private lateinit var falseButton: Button
-//    private lateinit var nextButton: Button
-//    private lateinit var previousButton: Button
-//    private lateinit var questionTextView: TextView
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),
@@ -32,12 +27,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-//        trueButton = findViewById(R.id.true_button)
-//        falseButton = findViewById(R.id.false_button)
-//        nextButton = findViewById(R.id.next_button)
-//        previousButton = findViewById(R.id.previous_button)
-//        questionTextView = findViewById(R.id.question_text_view)
 
         binding.trueButton.setOnClickListener {view: View ->
             checkAnswer(true)
@@ -60,6 +49,12 @@ class MainActivity : AppCompatActivity() {
                 currentIndex = (currentIndex - 1) % questionBank.size
                 updateQuestion()
             }
+        }
+
+        binding.cheatButton.setOnClickListener{view:View ->
+            val answerIsTrue = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+            startActivity(intent)
         }
     }
 
