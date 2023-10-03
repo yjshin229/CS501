@@ -21,6 +21,7 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
 
     val questionsAnswered = BooleanArray(questionBank.size) { false }
+    val questionsCheated = BooleanArray(questionBank.size) { false }
     var numCorrectAnswers = 0
     var numQuestionsAnswered = 0
 
