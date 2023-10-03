@@ -21,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
             if (username == "ronald" && password == "czik") {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
+                Toast.makeText(this, "Welcome $username", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
                 Toast.makeText(this, "Incorrect credentials", Toast.LENGTH_SHORT).show()
