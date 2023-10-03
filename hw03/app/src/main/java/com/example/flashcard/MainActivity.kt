@@ -5,29 +5,31 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.example.flashcard.databinding.ActivityMainBinding
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
-    private var answerKeys = IntArray(10)
-    private var firstNumbers = IntArray(10)
-    private var secondNumbers = IntArray(10)
-    private var submittedAnswers = IntArray(10)
-    private var questionIndex = 0
-    private var isAddition = BooleanArray(10)
+    private val flashCardViewModel: FlashCardViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if(flashCardViewModel.questionGenerated){
+            binding.generateButton.isEnabled = false
+            binding.submitButton.isEnabled = true
+            displayQuestion()
+        }
+
         binding.generateButton.setOnClickListener{
             generateQuestions()
             binding.generateButton.isEnabled = false
             binding.submitButton.isEnabled = true
             displayQuestion()
+            flashCardViewModel.questionGenerated = true
         }
         binding.submitButton.setOnClickListener{
             if(binding.submitEdittext.text.isEmpty()){
@@ -37,17 +39,18 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }else{
-                submittedAnswers[questionIndex] = binding.submitEdittext.text.toString().toInt()
-                if(questionIndex !=9){
+                flashCardViewModel.submittedAnswers[flashCardViewModel.questionIndex] = binding.submitEdittext.text.toString().toInt()
+                if(flashCardViewModel.questionIndex !=9){
                     binding.submitEdittext.text.clear()
-                    questionIndex ++
+                    flashCardViewModel.questionIndex ++
                     displayQuestion()
                 }else{
-                    questionIndex = 0
+                    flashCardViewModel.questionIndex = 0
                     binding.generateButton.isEnabled = true
                     binding.submitButton.isEnabled = false
                     resetQuestion()
                     getResult()
+                    flashCardViewModel.questionGenerated = false
                 }
             }
 
@@ -64,11 +67,11 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun displayQuestion(){
-        binding.firstNumber.text = firstNumbers[questionIndex].toString()
-        binding.secondNumber.text = secondNumbers[questionIndex].toString()
-        binding.operator.text = if (isAddition[questionIndex] ) "+" else "-"
-        if(isAddition[questionIndex]) binding.additionRadio.isChecked = true else binding.subtractionRadio.isChecked = true
-        binding.questionIndexView.text =(questionIndex + 1).toString()
+        binding.firstNumber.text = flashCardViewModel.firstNumbers[flashCardViewModel.questionIndex].toString()
+        binding.secondNumber.text = flashCardViewModel.secondNumbers[flashCardViewModel.questionIndex].toString()
+        binding.operator.text = if (flashCardViewModel.isAddition[flashCardViewModel.questionIndex] ) "+" else "-"
+        if(flashCardViewModel.isAddition[flashCardViewModel.questionIndex]) binding.additionRadio.isChecked = true else binding.subtractionRadio.isChecked = true
+        binding.questionIndexView.text =(flashCardViewModel.questionIndex + 1).toString()
     }
 
     private fun resetQuestion(){
@@ -78,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         binding.submitEdittext.text.clear()
         binding.additionRadio.isChecked = false
         binding.subtractionRadio.isChecked = false
-        binding.questionIndexView.text =(questionIndex + 1).toString()
+        binding.questionIndexView.text =(flashCardViewModel.questionIndex + 1).toString()
     }
 
     private fun getTwoRandom() : IntArray{
@@ -94,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateAnswer(arr: IntArray, index: Int):Int{
-        if(isAddition[index]){
+        if(flashCardViewModel.isAddition[index]){
             return arr[0] + arr[1]
         }else{
             return arr[0] - arr[1]
@@ -104,12 +107,12 @@ class MainActivity : AppCompatActivity() {
     private fun generateQuestions(){
         for (i in 0..9){
             val operator = getOperator()
-            isAddition[i] = operator
+            flashCardViewModel.isAddition[i] = operator
             val ints = getTwoRandom()
             val answer = calculateAnswer(ints, i)
-            firstNumbers[i] = ints[0]
-            secondNumbers[i] = ints[1]
-            answerKeys[i] = answer
+            flashCardViewModel.firstNumbers[i] = ints[0]
+            flashCardViewModel.secondNumbers[i] = ints[1]
+            flashCardViewModel.answerKeys[i] = answer
         }
     }
 
@@ -117,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         var score = 0
 
         for(i in 0..9){
-            if(answerKeys[i] == submittedAnswers[i]){
+            if(flashCardViewModel.answerKeys[i] == flashCardViewModel.submittedAnswers[i]){
                 score++
             }
         }
