@@ -1,11 +1,10 @@
 package com.example.flashcard
 
-import android.widget.Toast
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import kotlin.random.Random
 
 private const val TAG = "FlashCardViewModel"
-class FlashCardViewModel : ViewModel(){
+class FlashCardViewModel(savedStateHandle: SavedStateHandle) : ViewModel(){
     var answerKeys = IntArray(10)
     var firstNumbers = IntArray(10)
     var secondNumbers = IntArray(10)
