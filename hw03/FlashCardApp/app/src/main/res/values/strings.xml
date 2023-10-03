@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FlashCard</string>
+    <string name="generate_problems">Generate 10 Random Problems</string>
+    <string name="addition">Addition</string>
+    <string name="subtraction">Subtraction</string>
+    <string name="your_answer">Your Answer:</string>
+    <string name="submit">Submit</string>
+    <string name="empty_input">Input needed to submit!</string>
+</resources>
