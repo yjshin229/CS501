@@ -89,8 +89,8 @@ class MainActivity : AppCompatActivity() {
         val messageResId = when {
             quizViewModel.questionsCheated[quizViewModel.currentIndex] -> R.string.judgment_toast
             userAnswer == correctAnswer -> {
-                R.string.correct_toast
                 quizViewModel.numCorrectAnswers++
+                R.string.correct_toast  // Make sure to return a value
             }
             else -> R.string.incorrect_toast
         }
@@ -108,5 +108,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Quiz complete! Your score: ${grade.toInt()}%", Toast.LENGTH_LONG).show()
         }
     }
+
 
 }
