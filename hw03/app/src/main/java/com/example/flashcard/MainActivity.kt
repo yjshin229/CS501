@@ -9,12 +9,12 @@ import kotlin.random.Random
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private var answer_keys = emptyArray<Int>()
-    var first_numbers = emptyArray<Int>()
-    var second_numbers = emptyArray<Int>()
-    var submitted_answers = emptyArray<Int>()
+    private var answer_keys = IntArray(10)
+    var first_numbers = IntArray(10)
+    var second_numbers = IntArray(10)
+    var submitted_answers = IntArray(10)
     var question_index = 0
-    var is_addition = emptyArray<Boolean>()
+    var is_addition = BooleanArray(10)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +28,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun getTwoRandom() : Array<Int>{
-        val ints = emptyArray<Int>()
+    private fun getTwoRandom() : IntArray{
+        val ints = IntArray(2)
         ints[0] = Random.nextInt(1,100)
         ints[1] = Random.nextInt(1,20)
         return ints
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         return Random.nextBoolean()
     }
 
-    private fun calculateAnswer(arr: Array<Int>, index: Int):Int{
+    private fun calculateAnswer(arr: IntArray, index: Int):Int{
         if(is_addition[index]){
             return arr[0] + arr[1]
         }else{
