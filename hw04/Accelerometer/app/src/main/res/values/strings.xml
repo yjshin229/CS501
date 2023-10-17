@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Accelerometer</string>
+    <string name="seekbar_des">Adjust the seek bar: set the accuracy</string>
+    <string name="init_threshold">Threshold: 25</string>
+</resources>
