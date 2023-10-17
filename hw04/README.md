@@ -39,6 +39,12 @@
   - Visual feedback indicating whether the flashlight turned on or off.
   - Toggle switch state changes.
   - Toast notifications for errors or flashlight state information.
+
+| mainActivity(init) | toggleOn | toggleOff | lightOff using textinput |
+| - | - | - | - |
+|![Screenshot_1697586180](https://github.com/yjshin229/CS501/assets/78634177/e40b69b2-13de-4c7d-9861-b22be918c767)| ![Screenshot_1697586117](https://github.com/yjshin229/CS501/assets/78634177/acebe6eb-9e0d-4e2a-91bb-08c7c1cc2631) | ![Screenshot_1697586114](https://github.com/yjshin229/CS501/assets/78634177/b75e8cef-dff8-4cb2-8c6e-d82843f82a4f) | ![Screenshot_1697586123](https://github.com/yjshin229/CS501/assets/78634177/7d454013-62ce-45cb-a70d-ebf3c257da2a)
+
+
     
 #### Direction Fling App 
 1. What design questions do you need to ask before beginning?
