@@ -1,22 +1,23 @@
 package com.example.hangman
 
-import android.app.GameState
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 
 private const val TAG = "HangmanViewModel"
 
 class HangmanViewModel : ViewModel() {
-    private var answer = ""
+    var answer = ""
     private var hint = ""
-    private var lettersUsed: String = ""
+    var lettersUsed = mutableListOf<String>()
     private var wrongAttempts = 0
     private var hintNum = 0
     private var maxTries = 6
     private var currentTries = 0
     lateinit var underscoreWord: String
-    private var drawable:Int = R.drawable.hang0
+    var drawable:Int = R.drawable.hang0
     var isPlaying = false
     var hasWon = false
+
     private val wordDictionary: Map<String, List<String>> = mapOf(
         "fruit" to listOf("apple", "banana", "kiwi", "grape", "orange"),
         "country" to listOf("switzerland", "sweden", "china", "canada", "Italy"),
@@ -26,8 +27,27 @@ class HangmanViewModel : ViewModel() {
     )
 
     fun guessLetter(letter: Char) {
-        // Implement logic
-        // Update _wrongAttempts and _currentWordState as necessary
+        lettersUsed.add(letter.toString())
+        val indexes = mutableListOf<Int>()
+
+        answer.forEachIndexed { index, char ->
+            if (char.equals(letter, true)) {
+                indexes.add(index)
+            }
+        }
+
+        var finalUnderscoreWord = underscoreWord
+        indexes.forEach { index ->
+            val sb = StringBuilder(finalUnderscoreWord).also { it.setCharAt(index, letter) }
+            finalUnderscoreWord = sb.toString()
+        }
+
+        if (indexes.isEmpty()) {
+            currentTries++
+            drawable = getHangmanDrawable()
+        }
+
+        underscoreWord = finalUnderscoreWord
     }
 
     fun startGame(){
@@ -40,13 +60,27 @@ class HangmanViewModel : ViewModel() {
         hint = currentKey
         hintNum = 0
         wrongAttempts = 0
+        lettersUsed.clear()
         isPlaying = true
-    }
 
+    }
+    private fun getHangmanDrawable(): Int {
+        return when (currentTries) {
+            0 -> R.drawable.hang0
+            1 -> R.drawable.hang1
+            2 -> R.drawable.hang2
+            3 -> R.drawable.hang3
+            4 -> R.drawable.hang4
+            5 -> R.drawable.hang5
+            6 -> R.drawable.hang6
+            else -> R.drawable.hang6
+        }
+    }
     private fun generateUnderscores(word: String) {
         val sb = StringBuilder()
         word.forEach { _ -> sb.append("_")}
         underscoreWord = sb.toString()
     }
+
 
 }
