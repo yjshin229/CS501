@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Hangman</string>
+    <string name="used_letters">Used letters</string>
+    <string name="hint">Hint: </string>
+    <string name="get_hint">Get hint</string>
+    <string name="choose_letter">Choose a letter</string>
+    <string name="hint_disabled">Hint not available!</string>
+    <string name="won">You Won!</string>
+    <string name="lost">You Lost!</string>
+    <string name="start_new_game">Start Game</string>
+    <string name="remove_letter_hint">Half of the letters that are not in the answer is removed.</string>
+    <string name="vowel_hint">Vowels filled.</string>
+</resources>
