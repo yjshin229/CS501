@@ -1,7 +1,9 @@
 package com.example.flashlight
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.view.GestureDetector
@@ -14,31 +16,54 @@ import androidx.core.view.GestureDetectorCompat
 import android.util.Log
 import android.text.Editable
 import android.text.TextWatcher
-
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
     private var cameraManager: CameraManager? = null
     private var cameraId: String? = null
     private var isFlashlightOn = false
+    private var hasFlash = false
     private lateinit var mDetector: GestureDetectorCompat
-    fun processInputText(input: String): String = input.toUpperCase().trim()
-
+    fun processInputText(input: String): String = input.uppercase(Locale.ROOT).trim()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
-        cameraId = try {
-            cameraManager?.cameraIdList?.get(0)
-        } catch (e: Exception) {
-            Toast.makeText(this, "No camera available on this device.", Toast.LENGTH_SHORT).show()
-            null
-        }
-
         val flashlightToggle = findViewById<Switch>(R.id.toggleFlashlight)
         val actionTextBox = findViewById<EditText>(R.id.actionTextBox)
+
+        hasFlash = applicationContext.packageManager
+            .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
+
+        if (!hasFlash) {
+            Toast.makeText(this, "No flash available on this device.", Toast.LENGTH_SHORT).show()
+            flashlightToggle.isEnabled = false
+            actionTextBox.isEnabled = false
+        }
+
+        cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+//   
+        try {
+            for (id in cameraManager?.cameraIdList.orEmpty()) {
+                val characteristics = cameraManager?.getCameraCharacteristics(id)
+                val hasFlashUnit = characteristics?.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+                if (hasFlashUnit) {
+                    cameraId = id
+                    break
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error while accessing the camera.", Toast.LENGTH_SHORT).show()
+        }
+
+
+
+
+
+
+
+
 
         actionTextBox.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -86,6 +111,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFlashlight(state: Boolean) {
+        if(!hasFlash){
+            return
+        }
         try {
             if (cameraId != null) { // Check if device has a camera
                 cameraManager?.setTorchMode(cameraId!!, state)
