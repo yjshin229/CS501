@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Direction Fling App</string>
+    <string name="device_shaken">Device shaken!</string>
+    <string name="direction_north">You\'re heading North!</string>
+    <string name="direction_south">You\'re heading South!</string>
+    <string name="direction_east">You\'re heading East!</string>
+    <string name="direction_west">You\'re heading West!</string>
+</resources>
