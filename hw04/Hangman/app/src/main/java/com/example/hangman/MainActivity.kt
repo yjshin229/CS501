@@ -2,8 +2,10 @@ package com.example.hangman
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -20,27 +22,60 @@ class MainActivity : AppCompatActivity() {
         binding.newGameButton.setOnClickListener{
             startGame()
         }
+        binding.getHintButton.setOnClickListener {
+            val hintNum = hangmanViewModel.getHint()
+            if(hintNum == 1){
+                hangmanViewModel.showFirstHint = true
+                binding.firstHintText.text = hangmanViewModel.hint
+            }else if(hintNum == 2){
+                Toast.makeText(
+                    this,
+                    R.string.remove_letter_hint,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else if(hintNum == 3){
+                Toast.makeText(
+                    this,
+                    R.string.vowel_hint,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else{
+                Toast.makeText(
+                    this,
+                    R.string.hint_disabled,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            updateUI()
+        }
         updateUI()
-
+        
         binding.lettersLayout.children.forEach { letterView ->
             if(letterView is TextView){
                 letterView.setOnClickListener {
-                    hangmanViewModel.guessLetter(letterView.text[0])
-                    updateUI()
+                    if(!hangmanViewModel.isPlaying){
+                        return@setOnClickListener
+                    }
+                    hangmanViewModel.guessLetter(letterView.text[0],false)
                     letterView.visibility = View.INVISIBLE
+                    updateUI()
+
                 }
             }
         }
+        
 
     }
 
     private fun startGame(){
+        hangmanViewModel.firstPlay = false
         binding.gameLostTextView.visibility = View.GONE
         binding.gameWonTextView.visibility = View.GONE
         hangmanViewModel.startGame()
         binding.lettersLayout.children.forEach { letterView ->
             letterView.visibility = View.VISIBLE
         }
+
         updateUI()
         hangmanViewModel.startGame()
     }
@@ -54,14 +89,17 @@ class MainActivity : AppCompatActivity() {
                     }
             }
         }
+        if(hangmanViewModel.showFirstHint){
+            binding.firstHintText.text = hangmanViewModel.hint
+        }
         if(hangmanViewModel.isPlaying){
             binding.answerTextView.text = hangmanViewModel.underscoreWord
             binding.hangmanImage.setImageDrawable(ContextCompat.getDrawable(this, hangmanViewModel.drawable))
         }else{
             if(hangmanViewModel.hasWon){
-                showGameWon(hangmanViewModel.answer)
+                if(!hangmanViewModel.firstPlay) showGameWon(hangmanViewModel.answer)
             }else{
-                showGameLost(hangmanViewModel.answer)
+                if(!hangmanViewModel.firstPlay)showGameLost(hangmanViewModel.answer)
             }
         }
     }
