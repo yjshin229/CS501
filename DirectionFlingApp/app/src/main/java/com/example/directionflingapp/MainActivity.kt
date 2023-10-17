@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Toast
-import java.lang.Math.abs
 
 class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, SensorEventListener {
 
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Sen
     private var lastY: Float = 0.0f
     private var lastZ: Float = 0.0f
 
-    private val shakeThreshold = 800 // Adjust this based on your needs
+    private val shakeThreshold = 800 // Hardcoded for now
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +53,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Sen
         val diffY = e2.y - e1.y
 
         if (kotlin.math.abs(diffX) > kotlin.math.abs(diffY)) {
-            // It's a left or right fling
             if (diffX > 0) {
                 // Right fling
                 startActivity(Intent(this, EastActivity::class.java))
@@ -63,7 +61,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Sen
                 startActivity(Intent(this, WestActivity::class.java))
             }
         } else {
-            // It's an up or down fling
             if (diffY > 0) {
                 // Down fling
                 startActivity(Intent(this, SouthActivity::class.java))
@@ -109,12 +106,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Sen
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // No-op
-    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     private fun onShake() {
-        // Navigate back to MainActivity or show a Toast or any other action.
-        Toast.makeText(this, "Device shaken!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.device_shaken), Toast.LENGTH_SHORT).show()
     }
 }
