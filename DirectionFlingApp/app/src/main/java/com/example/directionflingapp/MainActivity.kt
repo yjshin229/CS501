@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Sen
     private var lastY: Float = 0.0f
     private var lastZ: Float = 0.0f
 
-    private val shakeThreshold = 800 // Hardcoded for now
+    private val shakeThreshold = 100 // Hardcoded for now
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
