@@ -1,17 +1,22 @@
 package com.example.flashlight
 
+import com.example.flashlight.MainActivity
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
-import org.junit.Assert.*
+class MainActivityTest {
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+    private val mainActivity = MainActivity()
+
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun givenLowercaseOn_whenProcessInputText_thenReturnON() {
+        val result = mainActivity.processInputText("on")
+        assertEquals("ON", result)
+    }
+
+    @Test
+    fun givenInputWithSpaces_whenProcessInputText_thenReturnTrimmedInput() {
+        val result = mainActivity.processInputText("  OFF  ")
+        assertEquals("OFF", result)
     }
 }

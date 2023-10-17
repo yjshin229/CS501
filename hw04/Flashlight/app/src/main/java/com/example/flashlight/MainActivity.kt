@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private var cameraId: String? = null
     private var isFlashlightOn = false
     private lateinit var mDetector: GestureDetectorCompat
+    fun processInputText(input: String): String = input.toUpperCase().trim()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
