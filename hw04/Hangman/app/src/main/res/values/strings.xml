@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Hangman</string>
+    <string name="used_letters">Used letters</string>
+    <string name="hint">Hint: </string>
+    <string name="choose_letter">Choose a letter</string>
+    <string name="hint_disabled">Hint not available!</string>
+    <string name="won">You Won!</string>
+    <string name="lost">You Lost!</string>
+    <string name="start_new_game">Start Game</string>
+</resources>
