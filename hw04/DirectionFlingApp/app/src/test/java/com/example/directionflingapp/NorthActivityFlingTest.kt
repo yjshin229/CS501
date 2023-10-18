@@ -15,6 +15,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual.equalTo
 import org.robolectric.Shadows.shadowOf
 
+/* Doesn't Work? */
 @RunWith(RobolectricTestRunner::class)
 class NorthActivityFlingTest {
 
