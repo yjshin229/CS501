@@ -113,6 +113,8 @@ class MainActivity : AppCompatActivity() {
     private fun showGameWon(wordToGuess: String) {
         binding.answerTextView.text = wordToGuess
         binding.gameWonTextView.visibility = View.VISIBLE
+        binding.hangmanImage.setImageDrawable(ContextCompat.getDrawable(this, hangmanViewModel.getHangmanDrawable()
+        ))
     }
 
 }

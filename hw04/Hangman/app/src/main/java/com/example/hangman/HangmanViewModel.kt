@@ -79,7 +79,7 @@ class HangmanViewModel : ViewModel() {
         drawable = getHangmanDrawable()
 
     }
-    private fun getHangmanDrawable(): Int {
+    fun getHangmanDrawable(): Int {
         return when (currentTries) {
             0 -> R.drawable.hang0
             1 -> R.drawable.hang1
@@ -99,7 +99,8 @@ class HangmanViewModel : ViewModel() {
 
     fun getHint():Int{
         var retval = 0
-            if(hintNum == 0){
+        when (hintNum) {
+            0 -> {
                 if(currentTries == maxTries -1){
                     isPlaying = false
                     hasWon = false
@@ -107,7 +108,8 @@ class HangmanViewModel : ViewModel() {
                 retval = 1
                 currentTries ++
                 hintNum ++
-            }else if (hintNum == 1){
+            }
+            1 -> {
                 if(currentTries == maxTries -1){
                     isPlaying = false
                     hasWon = false
@@ -116,7 +118,8 @@ class HangmanViewModel : ViewModel() {
                 retval = 2
                 currentTries ++
                 hintNum ++
-            }else if(hintNum == 2){
+            }
+            2 -> {
                 if(currentTries == maxTries -1){
                     isPlaying = false
                     hasWon = false
@@ -125,9 +128,11 @@ class HangmanViewModel : ViewModel() {
                 retval = 3
                 currentTries ++
                 hintNum ++
-            }else{
+            }
+            else -> {
                 retval = -1
             }
+        }
 
         drawable = getHangmanDrawable()
         return retval
