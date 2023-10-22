@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp">
+    <TextView
+        android:id="@+id/celsius_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/celsius"
+        android:textSize="50dp"
+        android:textStyle="bold" />
+        <SeekBar
+            android:id="@+id/celsius_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/celsius_text"
+            android:paddingVertical="20dp"
+            android:progressDrawable="@drawable/seek_bar"
+            android:thumb="@drawable/seek_thumb"/>
+        <TextView
+            android:id="@+id/celsius_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.00"
+            android:textSize="50dp"
+            android:textStyle="bold"
+            android:layout_below="@+id/celsius_seekbar"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/outline"
+            android:textColor="@color/blue"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp">
+        <TextView
+            android:id="@+id/fahrenheit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fahrenheit"
+            android:textSize="50dp"
+            android:textStyle="bold" />
+        <SeekBar
+            android:id="@+id/fahrenheit_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fahrenheit_text"
+            android:paddingVertical="20dp"
+            android:progressDrawable="@drawable/seek_bar"
+            android:thumb="@drawable/seek_thumb"
+            android:max="200"
+            android:progress="32"
+            />
+        <TextView
+            android:id="@+id/fahrenheit_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="32.00"
+            android:textSize="50dp"
+            android:textStyle="bold"
+            android:layout_below="@+id/fahrenheit_seekbar"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/outline"
+            android:textColor="@color/blue"/>
+
+    </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/message"
+        android:textSize="30dp"
+        android:layout_marginTop="20dp"
+        android:paddingVertical="20dp"/>
+
+</LinearLayout>
