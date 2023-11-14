@@ -243,5 +243,15 @@ class CrimeDetailFragment : Fragment() {
                 binding.crimePhoto.tag = null
             }
         }
+
+        binding.crimePhoto.setOnClickListener {
+            photoFileName?.let {
+                val photoFile = File(requireContext().applicationContext.filesDir, it)
+                if (photoFile.exists()) {
+                    PhotoZoomFragment.newInstance(photoFile).show(parentFragmentManager, "PhotoZoomDialog")
+                }
+            }
+        }
     }
+
 }
